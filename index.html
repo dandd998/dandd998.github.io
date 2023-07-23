@@ -1,578 +1,585 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      * {
-        box-sizing: border-box;
-      }
 
-      body {
-        font-family: Arial, sans-serif;
-      }
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-      .tabs {
-        display: flex;
-        justify-content: space-between;
-      }
+    body {
+      font-family: Arial, sans-serif;
+    }
 
-      .tab {
-        flex: 1;
-        padding: 10px;
-        background-color: #f0f0f0;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
+    .tabs {
+      display: flex;
+      justify-content: space-between;
+    }
 
-      .table {
-        border-collapse: separate;
-        border-spacing: 0 1em;
-      }
+    .tab {
+      flex: 1;
+      padding: 10px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
-      .tab:hover {
-        background-color: #e0e0e0;
-      }
+    .table {
+      border-collapse: separate;
+      border-spacing: 0 1em;
+    }
 
-      .tab.active {
-        background-color: #ccc;
-      }
+    .tab:hover {
+      background-color: #e0e0e0;
+    }
 
-      .middle {
-        width: 10%;
-        text-align: center;
-      }
+    .tab.active {
+      background-color: #ccc;
+    }
 
-      .upMargin {
-        line-height: 20px;
-        padding-top: 20px;
-      }
+    .middle {
+      width: 10%;
+      text-align: center;
+    }
 
-      .tab-content {
-        display: none;
-        padding: 20px;
-        background-color: #fff;
-      }
+    .upMargin {
+      line-height: 20px;
+      padding-top: 20px;
+    }
 
-      .timeline-area {
-        margin: 90px auto;
-        width: 360px;
-        border-left: 2px solid #ccc;
-        padding: 0 20px 0 30px;
-      }
+    .tab-content {
+      display: none;
+      padding: 20px;
+      background-color: #fff;
+    }
 
-      #tAId {
-        color: #00a708;
-        background-color: #fff;
-        padding: 10px 25px;
-        font-size: 16px;
-        border: 1px solid #ccc;
-        line-height: 1.7;
-        position: relative;
-        height: 110px;
-        margin-bottom: 20px;
-      }
+    .timeline-area {
+      margin: 90px auto;
+      width: 360px;
+      border-left: 2px solid #ccc;
+      padding: 0 20px 0 30px;
+    }
 
-      #tAId::before {
-        content: "";
-        display: block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: #000;
-        border-color: #000;
-        border: 3px solid #ddd;
-        position: absolute;
-        top: 10px;
-        left: -40px;
-      }
+    #tAId {
+      color: #00a708;
+      background-color: #fff;
+      padding: 10px 25px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      line-height: 1.7;
+      position: relative;
+      height: 110px;
+      margin-bottom: 20px;
+    }
 
-      #tAId::after {
-        content: "";
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-color: transparent #ddd transparent transparent;
-        border-width: 8px;
-        position: absolute;
-        left: -17px;
-        top: 10px;
-      }
+    #tAId::before {
+      content: "";
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #000;
+      border-color: #000;
+      border: 3px solid #ddd;
+      position: absolute;
+      top: 10px;
+      left: -40px;
+    }
 
-      #OSCP {
-        color: #e0e0e0;
-        background: #131f33;
-      }
+    #tAId::after {
+      content: "";
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-color: transparent #ddd transparent transparent;
+      border-width: 8px;
+      position: absolute;
+      left: -17px;
+      top: 10px;
+    }
 
-      .notesTag {
-        font-size: smaller;
-        color: #796d6d;
-      }
+    #tAIdDone{
+      color: white;
+      background-color: #131f33;
+      padding: 10px 25px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      line-height: 1.7;
+      position: relative;
+      height: 110px;
+      margin-bottom: 20px;
+    }
+    
+    #OSCP {
+      color: #e0e0e0;
+      background: #131f33;
+    }
 
-      /* #donts {
+    .notesTag {
+      font-size: smaller;
+      color: #796d6d;
+    }
+
+    /* #donts {
         display: flex;
         flex-wrap: wrap;
       } */
 
-      .tab-content.active {
-        display: block;
-      }
-    </style>
-  </head>
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
 
-  <body>
-    <div class="tabs">
-      <div class="tab active" onclick="changeTab(event, 'todotom')">
-        TO-DO Today
-      </div>
-      <div class="tab" onclick="changeTab(event, 'todos')">TO-DO's</div>
-      <div class="tab" onclick="changeTab(event, 'towatch')">To Watch</div>
-      <div class="tab" onclick="changeTab(event, 'OSCP')">OSCP</div>
-      <div class="tab" onclick="changeTab(event, 'dos')">DO's</div>
-      <div class="tab" onclick="changeTab(event, 'donts')">DON'Ts</div>
-      <div class="tab" onclick="changeTab(event, 'why')">WHY?</div>
+<body>
+  <div class="tabs">
+    <div class="tab active" onclick="changeTab(event, 'todotom')">
+      TO-DO Today
     </div>
+    <div class="tab" onclick="changeTab(event, 'todos')">TO-DO's</div>
+    <div class="tab" onclick="changeTab(event, 'towatch')">To Watch</div>
+    <div class="tab" onclick="changeTab(event, 'OSCP')">OSCP</div>
+    <div class="tab" onclick="changeTab(event, 'dos')">DO's</div>
+    <div class="tab" onclick="changeTab(event, 'donts')">DON'Ts</div>
+    <div class="tab" onclick="changeTab(event, 'why')">WHY?</div>
+  </div>
 
-    <div id="todos" class="tab-content">
-      <h2>TO-DO's</h2>
-      <table class="table">
-        <tr class="upMargin">
-          <td><strike>Google Coursera Cyber Security Certification</strike></td>
-          <td class="middle">-----</td>
-        </tr>
-        <tr class="upMargin">
-          <td>Create a Resume again.</td>
-          <td class="middle">-----</td>
-        </tr>
-         <tr class="upMargin">
-          <td>Create a safety net of 1 LAKH for Laptop/PC</td>
-          <td class="middle">-----</td>
-        </tr>
-         <tr class="upMargin">
-          <td>Create a safety Net of 1 Lakh for the GYM</td>
-          <td class="middle">-----</td>
-        </tr>
-        <tr class="upMargin">
-          <td><strike>Finish off your Final Year SOAR Report</strike></td>
-          <td class="middle">-----</td>
-        </tr>
-        <tr class="upMargin">
-          <td>Buying Monitors</td>
-          <td class="middle">-----</td>
-        </tr>
-        <tr class="upMargin">
-          <td>Starting to SAVE FOR MARRIAGE, GYM, HOUSING LOAN</td>
-          <td class="middle">-----</td>
-        </tr>
-        <tr class="upMargin">
-          <td>Start selling oils</td>
-          <td class="middle">-----</td>
-        </tr>
-      </table>
-    </div>
+  <div id="todos" class="tab-content">
+    <h2>TO-DO's</h2>
+    <table class="table">
+      <tr class="upMargin">
+        <td><strike>Google Coursera Cyber Security Certification</strike></td>
+        <td class="middle">-----</td>
+      </tr>
+      <tr class="upMargin">
+        <td>Create a Resume again.</td>
+        <td class="middle">-----</td>
+      </tr>
+      <tr class="upMargin">
+        <td>Create a safety net of 1 LAKH for Laptop/PC</td>
+        <td class="middle">-----</td>
+      </tr>
+      <tr class="upMargin">
+        <td>Create a safety Net of 1 Lakh for the GYM</td>
+        <td class="middle">-----</td>
+      </tr>
+      <tr class="upMargin">
+        <td><strike>Finish off your Final Year SOAR Report</strike></td>
+        <td class="middle">-----</td>
+      </tr>
+      <tr class="upMargin">
+        <td>Buying Monitors</td>
+        <td class="middle">-----</td>
+      </tr>
+      <tr class="upMargin">
+        <td>Starting to SAVE FOR MARRIAGE, GYM, HOUSING LOAN</td>
+        <td class="middle">-----</td>
+      </tr>
+      <tr class="upMargin">
+        <td>Start selling oils</td>
+        <td class="middle">-----</td>
+      </tr>
+    </table>
+  </div>
 
-    <div id="towatch" class="tab-content">
-      <u><p>https://www.youtube.com/watch?v=FDeuOhE5MhU&ab_channel=NahamSec</p></u>
-      <u><p>https://www.youtube.com/watch?v=C_QFnx2PrPA&ab_channel=NahamSec</p></u>
-      <p><u>https://www.youtube.com/watch?v=doFo0I_KU0o&ab_channel=NahamSec</u></p>
-      <p><u>
+  <div id="towatch" class="tab-content">
+    <u>
+      <p>https://www.youtube.com/watch?v=FDeuOhE5MhU&ab_channel=NahamSec</p>
+    </u>
+    <u>
+      <p>https://www.youtube.com/watch?v=C_QFnx2PrPA&ab_channel=NahamSec</p>
+    </u>
+    <p><u>https://www.youtube.com/watch?v=doFo0I_KU0o&ab_channel=NahamSec</u></p>
+    <p><u>
         https://www.youtube.com/watch?v=KXQ_MUe6wKo&t=165s&ab_channel=DavidBombal
       </u></p>
-      <p><strike>https://youtu.be/doFo0I_KU0o</strike></p>
-      <p><u>https://youtu.be/C_QFnx2PrPA</u></p>
-      <p>https://youtu.be/FDeuOhE5MhU</p>
-      <p>https://youtu.be/lC8yQ3YcSuk</p>
-      <p>https://youtu.be/y8S_UIxHzH4</p>
-      <p>https://youtu.be/KXQ_MUe6wKo</p>
-      <p> https://tcm-sec.com/start-your-journey-with-bug-bounty/</p><p>
-https://youtu.be/r9dF9kd9hOo</p>
-      <p>
-https://youtu.be/R1amgARgFDs</p>
-      <p>
-https://youtu.be/IluKcbamqfk</p>
-      <p>
-https://youtu.be/kqcSFaY8gnY</p>
-      <p>
-https://youtu.be/9h9gZ8epKeM</p>
-      <p>
-https://youtu.be/xQ9wYeeWiWM</p>
-      <p>
-https://youtu.be/LDNk5m9VOOg</p>
-      <p>
-https://youtu.be/fDR8J34Kfws</p>
-      <p>https://www.youtube.com/watch?v=Rvz8cIilxfI</p>
-      <p>https://youtu.be/1Pz7PnwsR_4</p>
-      <p>https://youtu.be/1lVuWqsqESU</p>
-      <p>https://youtu.be/HXXoO0FwUKQ</p>
-      <p>https://youtu.be/WgMGLlpznao</p>
-      <p>https://youtu.be/3fIXMxi-rF0</p>
+    <p><strike>https://youtu.be/doFo0I_KU0o</strike></p>
+    <p><u>https://youtu.be/C_QFnx2PrPA</u></p>
+    <p>https://youtu.be/FDeuOhE5MhU</p>
+    <p>https://youtu.be/lC8yQ3YcSuk</p>
+    <p>https://youtu.be/y8S_UIxHzH4</p>
+    <p>https://youtu.be/KXQ_MUe6wKo</p>
+    <p> https://tcm-sec.com/start-your-journey-with-bug-bounty/</p>
+    <p>https://youtu.be/r9dF9kd9hOo</p>
+    <p>https://youtu.be/R1amgARgFDs</p>
+    <p>https://youtu.be/IluKcbamqfk</p>
+    <p>https://youtu.be/kqcSFaY8gnY</p>
+    <p>https://youtu.be/9h9gZ8epKeM</p>
+    <p>https://youtu.be/xQ9wYeeWiWM</p>
+    <p>https://youtu.be/LDNk5m9VOOg</p>
+    <p>https://youtu.be/fDR8J34Kfws</p>
+    <p>https://www.youtube.com/watch?v=Rvz8cIilxfI</p>
+    <p>https://youtu.be/1Pz7PnwsR_4</p>
+    <p>https://youtu.be/1lVuWqsqESU</p>
+    <p>https://youtu.be/HXXoO0FwUKQ</p>
+    <p>https://youtu.be/WgMGLlpznao</p>
+    <p>https://youtu.be/3fIXMxi-rF0</p>
+  </div>
 
-    </div>
+  <div id="todotom" class="tab-content active">
+    <!-- <h2>TO-DO Today</h2> -->
+    <ul>
+      <li><b>8:30 PM </b>Listen To Binaural beats 40 HZs</li>
+      <li><b>9:00 PM </b>Finish off till video number <a
+          href="https://www.youtube.com/watch?v=Icev9Oxf0WA&list=PLu0W_9lII9ahR1blWXxgSlL4y9iQBnLpR&index=3">5</a></li>
+      <li><b>11:00 PM </b>Finish off miscellenous work</li>
+      <li><b>12:00 PM </b>Finish off till video number <a
+          href="https://www.youtube.com/watch?v=Icev9Oxf0WA&list=PLu0W_9lII9ahR1blWXxgSlL4y9iQBnLpR&index=3">10</a></li>
+      <li><b>9:00 PM </b>The 12 RULES FOR LIFE</li>
+      <li>Call PRAVIN for asking for all the PPTs</li>
+    </ul>
+  </div>
 
-    <div id="todotom" class="tab-content active">
-      <!-- <h2>TO-DO Today</h2> -->
-      <ul>
-        <li>Listen To Binaurak beats 40 HZs</li>
-        <li>Finish off till video number <a href="https://www.youtube.com/watch?v=Icev9Oxf0WA&list=PLu0W_9lII9ahR1blWXxgSlL4y9iQBnLpR&index=3">10</a></li>
-        <li><b>9:00 PM </b>The 12 RULES FOR LIFE</li>
-        <li>Call PRAVIN for asking for all the PPTs</li>
-      </ul>
-    </div>
+  <div id="dos" class="tab-content">
+    <!-- <h2>DO's</h2> -->
+    <!-- <br>Add your DO's content here.  -->
+    <table class="table">
+      <tr class="upMargin">
+        <td>SHUT UP</td>
+        <td class="middle">-----</td>
+        <td>
+          Don't Speak if you don't Need to. Keep your mouth as shut as
+          possible.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>ALLOW BOREDOMNESS</td>
+        <td class="middle">-----</td>
+        <td>
+          BOREDOMNESS will bring out the ideas in you that are natural and the
+          ones that you are always in need indeed. Please do not play games or
+          open FB or Instagram as they kill those time to allow the ideas to
+          follow naturally.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>BEHAVE LIKE ANJUM AHMED</td>
+        <td class="middle">-----</td>
+        <td>
+          You are attractive in an obvious way. Please do not make any small
+          talks. Do not lie. Do not get involved with other team people as
+          that wastes your time. Speak less than necessary. Carry yourself in
+          a way that is charming in an obvious way. The less you speak the
+          more your presence will be valued.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>SET TIME aside TODAY's & TOMORROW's DEEP WORK</td>
+        <td class="middle">-----</td>
+        <td>
+          Set some specific amount of time aside to allow DEEP WOK to
+          naturally flow through switch off your phone in those hours. This
+          deep work will essentially help you flow through and thrive in this
+          weak economy.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>RESPECT BEFORE YOU SPEAK</td>
+        <td class="middle">-----</td>
+        <td>
+          Remember your DAD pointed out that you patted your uncle's back
+          while greeting them during the NAGDA's PEDHI. It is inappropriate.
+          Treat elders with respect.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>WORK UNTIL YOU ARE WORN OUT.</td>
+        <td class="middle">-----</td>
+        <td>
+          Remember your mother scrificed her health for you. Become so big
+          that no one can even think all her sacrifices were in Vain
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>SMILE</td>
+        <td class="middle">-----</td>
+        <td>Smile heartfully. It helps in every aspect.</td>
+      </tr>
+      <tr class="upMargin">
+        <td>RECOGNIZE WHAT THE OPPOSITE PERSON WANTS FROM YOU</td>
+        <td class="middle">-</td>
+        <td>
+          <br />
+          SHUT UP. Listen carefully what the opposite person is saying and
+          what exactly he wants from you.
 
-    <div id="dos" class="tab-content">
-      <!-- <h2>DO's</h2> -->
-      <!-- <br>Add your DO's content here.  -->
-      <table class="table">
-        <tr class="upMargin">
-          <td>SHUT UP</td>
-          <td class="middle">-----</td>
-          <td>
-            Don't Speak if you don't Need to. Keep your mouth as shut as
-            possible.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>ALLOW BOREDOMNESS</td>
-          <td class="middle">-----</td>
-          <td>
-            BOREDOMNESS will bring out the ideas in you that are natural and the
-            ones that you are always in need indeed. Please do not play games or
-            open FB or Instagram as they kill those time to allow the ideas to
-            follow naturally.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>BEHAVE LIKE ANJUM AHMED</td>
-          <td class="middle">-----</td>
-          <td>
-            You are attractive in an obvious way. Please do not make any small
-            talks. Do not lie. Do not get involved with other team people as
-            that wastes your time. Speak less than necessary. Carry yourself in
-            a way that is charming in an obvious way. The less you speak the
-            more your presence will be valued.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>SET TIME aside TODAY's & TOMORROW's DEEP WORK</td>
-          <td class="middle">-----</td>
-          <td>
-            Set some specific amount of time aside to allow DEEP WOK to
-            naturally flow through switch off your phone in those hours. This
-            deep work will essentially help you flow through and thrive in this
-            weak economy.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>RESPECT BEFORE YOU SPEAK</td>
-          <td class="middle">-----</td>
-          <td>
-            Remember your DAD pointed out that you patted your uncle's back
-            while greeting them during the NAGDA's PEDHI. It is inappropriate.
-            Treat elders with respect.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>WORK UNTIL YOU ARE WORN OUT.</td>
-          <td class="middle">-----</td>
-          <td>
-            Remember your mother scrificed her health for you. Become so big
-            that no one can even think all her sacrifices were in Vain
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>SMILE</td>
-          <td class="middle">-----</td>
-          <td>Smile heartfully. It helps in every aspect.</td>
-        </tr>
-        <tr class="upMargin">
-          <td>RECOGNIZE WHAT THE OPPOSITE PERSON WANTS FROM YOU</td>
-          <td class="middle">-</td>
-          <td>
-            <br />
-            SHUT UP. Listen carefully what the opposite person is saying and
-            what exactly he wants from you.
+          <br />Everyone definitely wants something or the other from you.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>
+          GOING TO THE OFFICE? KEEP YOUR MOUTH SHUT IF YOU WANT A BIG RAISE.
+        </td>
+        <td class="middle">-</td>
+        <td>
+          <br />REMEMBER.
+          <br />
+          Every stupid word or lie you say will get you away from the big hike
+          or promotion.
+          <br />
+          So only talk of the work related stuff and not small friendly talks.
+          <br />Always keep your guards up, never let them down.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>ALWAYS IN THE EVENING LISTEN TO YOUR DREAM PLAYLIST</td>
+        <td class="middle">-</td>
+        <td>
+          <br />
+          Go to the temple everyday and pray.
+          <br />
+          It worked very well for you so far and will keep on working until
+          you die.
+          <br />IN THIS NEGATIVE WORLD OF FILTERS, YOU NEED TO YOUR MIND
+          POSITIVE.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>BUY FOOD/SWEETS FOR RAGHU AND VIRITHA</td>
+        <td class="middle">-</td>
+        <td>
+          <br />
+          Everytime you see Raghu and Viritha always buy them some sweet or
+          food or something.
+          <br />
+          Remember the amount of money they paid for your food?
+          <br />
+          HARLEY's, THEOBROMA, MOMO's, ACTIVA, FURIT BOWL's, FOODBOOK COUPONS,
+          and so much more man.
+          <br />
+          Hence, always buy them something or the other. ALWAYS.
+        </td>
+      </tr>
+    </table>
+  </div>
 
-            <br />Everyone definitely wants something or the other from you.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>
-            GOING TO THE OFFICE? KEEP YOUR MOUTH SHUT IF YOU WANT A BIG RAISE.
-          </td>
-          <td class="middle">-</td>
-          <td>
-            <br />REMEMBER.
-            <br />
-            Every stupid word or lie you say will get you away from the big hike
-            or promotion.
-            <br />
-            So only talk of the work related stuff and not small friendly talks.
-            <br />Always keep your guards up, never let them down.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>ALWAYS IN THE EVENING LISTEN TO YOUR DREAM PLAYLIST</td>
-          <td class="middle">-</td>
-          <td>
-            <br />
-            Go to the temple everyday and pray.
-            <br />
-            It worked very well for you so far and will keep on working until
-            you die.
-            <br />IN THIS NEGATIVE WORLD OF FILTERS, YOU NEED TO YOUR MIND
-            POSITIVE.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>BUY FOOD/SWEETS FOR RAGHU AND VIRITHA</td>
-          <td class="middle">-</td>
-          <td>
-            <br />
-            Everytime you see Raghu and Viritha always buy them some sweet or
-            food or something.
-            <br />
-            Remember the amount of money they paid for your food?
-            <br />
-            HARLEY's, THEOBROMA, MOMO's, ACTIVA, FURIT BOWL's, FOODBOOK COUPONS,
-            and so much more man.
-            <br />
-            Hence, always buy them something or the other. ALWAYS.
-          </td>
-        </tr>
-      </table>
-    </div>
+  <div id="why" class="tab-content">
+    <table class="table">
+      <tr class="upMargin">
+        <td>WANT TO LIVE IN COLABA</td>
+        <td class="middle">-</td>
+        <td></td>
+      </tr>
+      <tr class="upMargin">
+        <td>Remember all the SACRIFICES made by your MOTHER?</td>
+        <td class="middle">-</td>
+        <td>She literally sacrificed her damn bloody health for you.</td>
+      </tr>
+      <tr class="upMargin">
+        <td>Not MASTURBATING?</td>
+        <td class="middle">-</td>
+        <td>
+          <br />
+          Can you recollect the Hunger you had to become better as you wanted
+          JASPREET as your GF? Well smarty pants you lost that hunger and the
+          eye of tiger the moment you started MASTURBATING
 
-    <div id="why" class="tab-content">
-      <table class="table">
-        <tr class="upMargin">
-          <td>WANT TO LIVE IN COLABA</td>
-          <td class="middle">-</td>
-          <td></td>
-        </tr>
-        <tr class="upMargin">
-          <td>Remember all the SACRIFICES made by your MOTHER?</td>
-          <td class="middle">-</td>
-          <td>She literally sacrificed her damn bloody health for you.</td>
-        </tr>
-        <tr class="upMargin">
-          <td>Not MASTURBATING?</td>
-          <td class="middle">-</td>
-          <td>
-            <br />
-            Can you recollect the Hunger you had to become better as you wanted
-            JASPREET as your GF? Well smarty pants you lost that hunger and the
-            eye of tiger the moment you started MASTURBATING
+          <br />
+          You lost your DISCIPLINE and your command over the brain as well
+          BITCH. I dare you get it back. You owe it your previous self.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>DISCIPLINE</td>
+        <td class="middle">-</td>
+        <td>
+          You owe it to your 17th self. Don't let yourself down bitch. Do it
+          right.
+        </td>
+      </tr>
+    </table>
+  </div>
 
-            <br />
-            You lost your DISCIPLINE and your command over the brain as well
-            BITCH. I dare you get it back. You owe it your previous self.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>DISCIPLINE</td>
-          <td class="middle">-</td>
-          <td>
-            You owe it to your 17th self. Don't let yourself down bitch. Do it
-            right.
-          </td>
-        </tr>
-      </table>
-    </div>
+  <div id="donts" class="tab-content">
+    <!-- <h2>DON'Ts</h2> -->
+    <table class="table">
+      <tr class="upMargin">
+        <th>Threat</th>
+        <th class="middle">Date</th>
+        <th>Remarks</th>
+      </tr>
+      <tr class="upMargin">
+        <td>STOP LYING/PRETENDING</td>
+        <td class="middle">16/06/2023</td>
+        <td>Superior Man</td>
+      </tr>
+      <tr class="upMargin">
+        <td>Do not CHASE WOMEN</td>
+        <td class="middle">16/06/2023</td>
+        <td>
+          RIA DUTTA, RISHINA, JASPREET, MARIAM, AAYUSHI SALVI, JUHI SHAH
+          <br />the above list goes on and on and on <br />They all rejected
+          and left you cause you didn't have money. <br />
+          Get financially wealthy first. <br />
+          Please dont be a LOSER.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>STOP DOUBTING YOURSELF</td>
+        <td class="middle">16/06/2023</td>
+        <td>
+          You have made an enormous progress and will continue to do so. Stop
+          doubting yourself and be POSITIVE things will fall into its places.
+          <br />
+          You got this <br />Don't doubt yourself for a single second.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>
+          Do Not Masturbate, you need that for your growth and brain cells
+        </td>
+        <td class="middle">16/06/2023</td>
+        <td>
+          Dude Please don't. Berlin's beard be a BLOODY MAN, you need those
+          brain cells to become a better SOC ANALYST. Remember how great of a
+          BRAIN and MEMORY you once had in the past during your diploma days?
+          <br />For Fucks Sake get that thing back. <br />That will get you a
+          darn hot CHIC BITCH.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>
+          Do Not stand and gab at ATUL MAMA, CHETAN MAMA, they are futile and
+          fizzle.
+        </td>
+        <td class="middle">16/06/2023</td>
+      </tr>
+      <tr class="upMargin">
+        <td>DON'T OPEN YOUR MOUTH AT ALL</td>
+        <td class="middle"></td>
+        <td>
+          Everytime you unecessaily open your mouth you end up shitting up and
+          saying stupid stuff ruining your stupid reputation.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>DON'T LIE</td>
+        <td class="middle">18/6/2023</td>
+        <td>
+          Everytime you lie the opposite person catch holds of you. TRUTH
+          BEING TOLD you suck at LYING. So don't lie.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>DON'T EVER GET RUDE AT ALL</td>
+        <td class="middle">18/6/2023</td>
+        <td>
+          Everytime you are rude to someone you may win the argument but you
+          will still lose the argument and avoid then earn the opposite
+          person's hate FFS.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>DON'T EVER MAKE A FIRM STATEMENT</td>
+        <td class="middle">18/6/2023</td>
+        <td>
+          Everytime you make a firm statement you create a problem for
+          yourself like you gotta prove yourself everytime instead win battles
+          daily without making any of the firm statements.
+        </td>
+      </tr>
+      <tr class="upMargin">
+        <td>
+          Do Not go in the bedroom to talk to DAD/ DO NOT TALK TO DAD AT ALL
+        </td>
+        <td class="middle">10/07/2023</td>
+        <td>
+          Remember how your dad disapproved of you when you didn't get that
+          AMERICAN COMPANY job. <br />Bro FFS don't go talking to him
+          regarding your career. He never understood you. HE NEVER WILL
+          <br />Rather keep working and let him come and appreciate your
+          accomplishments. <br />Someday he will realise you made it on your
+          own.
+        </td>
+      </tr>
+    </table>
+  </div>
 
-    <div id="donts" class="tab-content">
-      <!-- <h2>DON'Ts</h2> -->
-      <table class="table">
-        <tr class="upMargin">
-          <th>Threat</th>
-          <th class="middle">Date</th>
-          <th>Remarks</th>
-        </tr>
-        <tr class="upMargin">
-          <td>STOP LYING/PRETENDING</td>
-          <td class="middle">16/06/2023</td>
-          <td>Superior Man</td>
-        </tr>
-        <tr class="upMargin">
-          <td>Do not CHASE WOMEN</td>
-          <td class="middle">16/06/2023</td>
-          <td>
-            RIA DUTTA, RISHINA, JASPREET, MARIAM, AAYUSHI SALVI, JUHI SHAH
-            <br />the above list goes on and on and on <br />They all rejected
-            and left you cause you didn't have money. <br />
-            Get financially wealthy first. <br />
-            Please dont be a LOSER.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>STOP DOUBTING YOURSELF</td>
-          <td class="middle">16/06/2023</td>
-          <td>
-            You have made an enormous progress and will continue to do so. Stop
-            doubting yourself and be POSITIVE things will fall into its places.
-            <br />
-            You got this <br />Don't doubt yourself for a single second.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>
-            Do Not Masturbate, you need that for your growth and brain cells
-          </td>
-          <td class="middle">16/06/2023</td>
-          <td>
-            Dude Please don't. Berlin's beard be a BLOODY MAN, you need those
-            brain cells to become a better SOC ANALYST. Remember how great of a
-            BRAIN and MEMORY you once had in the past during your diploma days?
-            <br />For Fucks Sake get that thing back. <br />That will get you a
-            darn hot CHIC BITCH.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>
-            Do Not stand and gab at ATUL MAMA, CHETAN MAMA, they are futile and
-            fizzle.
-          </td>
-          <td class="middle">16/06/2023</td>
-        </tr>
-        <tr class="upMargin">
-          <td>DON'T OPEN YOUR MOUTH AT ALL</td>
-          <td class="middle"></td>
-          <td>
-            Everytime you unecessaily open your mouth you end up shitting up and
-            saying stupid stuff ruining your stupid reputation.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>DON'T LIE</td>
-          <td class="middle">18/6/2023</td>
-          <td>
-            Everytime you lie the opposite person catch holds of you. TRUTH
-            BEING TOLD you suck at LYING. So don't lie.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>DON'T EVER GET RUDE AT ALL</td>
-          <td class="middle">18/6/2023</td>
-          <td>
-            Everytime you are rude to someone you may win the argument but you
-            will still lose the argument and avoid then earn the opposite
-            person's hate FFS.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>DON'T EVER MAKE A FIRM STATEMENT</td>
-          <td class="middle">18/6/2023</td>
-          <td>
-            Everytime you make a firm statement you create a problem for
-            yourself like you gotta prove yourself everytime instead win battles
-            daily without making any of the firm statements.
-          </td>
-        </tr>
-        <tr class="upMargin">
-          <td>
-            Do Not go in the bedroom to talk to DAD/ DO NOT TALK TO DAD AT ALL
-          </td>
-          <td class="middle">10/07/2023</td>
-          <td>
-            Remember how your dad disapproved of you when you didn't get that
-            AMERICAN COMPANY job. <br />Bro FFS don't go talking to him
-            regarding your career. He never understood you. HE NEVER WILL
-            <br />Rather keep working and let him come and appreciate your
-            accomplishments. <br />Someday he will realise you made it on your
-            own.
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <div id="OSCP" class="tab-content">
-      <h2>OSCP Roadmap</h2>
-      <section class="timeline-area">
-        <div id="tAId">Google Certification<br /></div>
-        <div id="tAId">
-          Learn Javascript<br />
-          <div class="notesTag">
-            Learn Javascript from the <a href="https://www.youtube.com/watch?v=qpU3WIqRz9I&list=PLu0W_9lII9ahR1blWXxgSlL4y9iQBnLpR&index=5">link</a></li>
-          </div>
+  <div id="OSCP" class="tab-content">
+    <h2>OSCP Roadmap</h2>
+    <section class="timeline-area">
+      <div id="tAIdDone">Google Certification<br /></div>
+      <div id="tAId">
+        Learn Javascript<br />
+        <div class="notesTag">
+          Learn Javascript from the <a
+            href="https://www.youtube.com/watch?v=qpU3WIqRz9I&list=PLu0W_9lII9ahR1blWXxgSlL4y9iQBnLpR&index=5">link</a>
+          </li>
         </div>
-        <div id="tAId">
-          TryHackMe<br />
-          <div class="notesTag">
-            Finish off this in a week.
-            <a href="https://tryhackme.com/path/outline/web"
-              >Course</a
-            >.
-            <b
-              >First ask for creds from Nandhu else Opt for monthly subscription
-              only.</b
-            >
-          </div>
+      </div>
+      <div id="tAId">
+        TryHackMe<br />
+        <div class="notesTag">
+          Finish off this in a week.
+          <a href="https://tryhackme.com/path/outline/web">Course</a>.
+          <b>First ask for creds from Nandhu else Opt for monthly subscription
+            only.</b>
         </div>
-        <div id="tAId">
-          TryHackMe<br />
-          <div class="notesTag">
-            Finish off this in a month.
-            <a href="https://tryhackme.com/path/outline/jrpenetrationtester"
-              >Course</a
-            >.
-            <b
-              >First ask for creds from Nandhu else Opt for monthly subscription
-              only.</b
-            >
-          </div>
+      </div>
+      <div id="tAId">
+        TryHackMe<br />
+        <div class="notesTag">
+          Finish off this in a month.
+          <a href="https://tryhackme.com/path/outline/jrpenetrationtester">Course</a>.
+          <b>First ask for creds from Nandhu else Opt for monthly subscription
+            only.</b>
         </div>
-        <div id="tAId">
-          TCM - Practical Ethical Hacking course<br />
-          <div class="notesTag">
-            BHARAT BHARADWAJ has access to this course content ask for it from
-            him.
-          </div>
+      </div>
+      <div id="tAId">
+        TCM - Practical Ethical Hacking course<br />
+        <div class="notesTag">
+          BHARAT BHARADWAJ has access to this course content ask for it from
+          him.
         </div>
-        <div id="tAId">
-          Hide01.ir - PWK Course <br />
-          <div class="notesTag">
-            Finish off the course videos online asap. Then read the PDF of OSCP.
-          </div>
+      </div>
+      <div id="tAId">
+        Hide01.ir - PWK Course <br />
+        <div class="notesTag">
+          Finish off the course videos online asap. Then read the PDF of OSCP.
         </div>
-        <div id="tAId">
-          HackTheBox<br />
-          <div class="notesTag">
-            Solve atleast <b>50-100</b> machines. BHARAT BHARADWAJ says this
-            step is not necessary but do it anyways.
-          </div>
+      </div>
+      <div id="tAId">
+        HackTheBox<br />
+        <div class="notesTag">
+          Solve atleast <b>50-100</b> machines. BHARAT BHARADWAJ says this
+          step is not necessary but do it anyways.
         </div>
-        <div id="tAId">
-          Buy OSCP<br />
-          <div class="notesTag">
-            If comfortable with the above work buy the OSCP else DO NOT.
-          </div>
+      </div>
+      <div id="tAId">
+        Buy OSCP<br />
+        <div class="notesTag">
+          If comfortable with the above work buy the OSCP else DO NOT.
         </div>
-        <div id="tAId">
-          How to start with Bug Bounty<br />
-          <div class="notesTag">
-            After the OSCP go here <a href="https://www.youtube.com/watch?v=nXvP8j3QtHI&list=PLbyncTkpno5FaAbJJ7YHvMY9wtJ9fyqCH"
-              >Course</a
-            >
-          </div>
+      </div>
+      <div id="tAId">
+        How to start with Bug Bounty<br />
+        <div class="notesTag">
+          After the OSCP go here <a
+            href="https://www.youtube.com/watch?v=nXvP8j3QtHI&list=PLbyncTkpno5FaAbJJ7YHvMY9wtJ9fyqCH">Course</a>
         </div>
-        
-      </section>
-    </div>
+      </div>
 
-    <script>
-      function changeTab(event, tabName) {
-        var i, tabContent, tabLinks;
-        tabContent = document.getElementsByClassName("tab-content");
-        for (i = 0; i < tabContent.length; i++) {
-          tabContent[i].style.display = "none";
-        }
+    </section>
+  </div>
 
-        tabLinks = document.getElementsByClassName("tab");
-        for (i = 0; i < tabLinks.length; i++) {
-          tabLinks[i].className = tabLinks[i].className.replace(" active", "");
-        }
-
-        document.getElementById(tabName).style.display = "block";
-        event.currentTarget.className += " active";
+  <script>
+    function changeTab(event, tabName) {
+      var i, tabContent, tabLinks;
+      tabContent = document.getElementsByClassName("tab-content");
+      for (i = 0; i < tabContent.length; i++) {
+        tabContent[i].style.display = "none";
       }
-    </script>
-  </body>
+
+      tabLinks = document.getElementsByClassName("tab");
+      for (i = 0; i < tabLinks.length; i++) {
+        tabLinks[i].className = tabLinks[i].className.replace(" active", "");
+      }
+
+      document.getElementById(tabName).style.display = "block";
+      event.currentTarget.className += " active";
+    }
+  </script>
+</body>
+
 </html>
